@@ -16,7 +16,7 @@ public class Location {
     @Column(nullable = false)
     String address;
     @Column(nullable = false)
-    String pinCode;
+    int pinCode;
     @ManyToOne
     City city;
     @OneToMany(mappedBy = "locationWithVehicle" , fetch = FetchType.LAZY)
