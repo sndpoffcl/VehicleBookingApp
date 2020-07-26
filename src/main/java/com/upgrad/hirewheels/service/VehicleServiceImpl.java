@@ -45,11 +45,16 @@ public class VehicleServiceImpl implements VehicleService {
 
     public List<VehicleDetailResponse> getAvailableVehicles(String categoryName, Date pickUpDate, Date dropDate, int locationId) {
         List<Vehicle> returnedVehicleList = new ArrayList<>();
-            vehicleCategoryDAO.findByVehicleCategoryName(categoryName).getVehicleSubCategoriesList().forEach(a-> a.getVehicleList().forEach(b-> {
-                if (b.getLocationWithVehicle().getId() == locationId) {
-                    returnedVehicleList.add(b);
-                }
+                vehicleCategoryDAO.findByVehicleCategoryName(categoryName).getVehicleSubCategoriesList().forEach(a-> a.getVehicleList().forEach(b-> {
+                    if (b.getLocationWithVehicle().getId() == locationId) {
+                        returnedVehicleList.add(b);
+                    }
             }));
+            // finding all vehicles under categoryName
+            // matching vehicles with locationId
+            // add matched vehicle to list
+
+
         List<Integer> bookedVehicleIdList = new ArrayList<>();
         returnedVehicleList.forEach(a-> {
             List<Booking> bookedVehicleList = bookingDAO.findByVehicleWithBooking(a);
@@ -59,10 +64,10 @@ public class VehicleServiceImpl implements VehicleService {
                 }
             });
         });
-        List<Integer> approvedVehicles = requestStatusDAO.findById(StatusEnum.APPROVED.getValue()).get().getAdminRequestList().stream().filter(a -> a.getActivity().getId() != ActivityEnum.CAR_OPT_OUT.getValue()).map(AdminRequest::getVehicle).map(Vehicle::getId).collect(Collectors.toList());
+       // List<Integer> approvedVehicles = requestStatusDAO.findById(StatusEnum.APPROVED.getValue()).get().getAdminRequestList().stream().filter(a -> a.getActivity().getId() != ActivityEnum.CAR_OPT_OUT.getValue()).map(AdminRequest::getVehicle).map(Vehicle::getId).collect(Collectors.toList());
         List<VehicleDetailResponse> mapVehicle = new ArrayList<>();
         for (Vehicle v : returnedVehicleList) {
-            if (approvedVehicles.contains(v.getId())) {
+            //if (approvedVehicles.contains(v.getId())) {
                 if(!bookedVehicleIdList.contains(v.getId())){
                     VehicleDetailResponse vehicleDetailResponse = new VehicleDetailResponse();
                     vehicleDetailResponse.setVehicleId(v.getId());
@@ -80,7 +85,7 @@ public class VehicleServiceImpl implements VehicleService {
                     vehicleDetailResponse.setVehicleSubCategoryId(v.getVehicleSubCategory().getId());
                     mapVehicle.add(vehicleDetailResponse);
                 }
-            }
+            //}
         }
        return mapVehicle;
     }
