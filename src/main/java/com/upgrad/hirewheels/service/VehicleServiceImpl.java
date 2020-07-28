@@ -7,6 +7,7 @@ import com.upgrad.hirewheels.entities.AdminRequest;
 import com.upgrad.hirewheels.entities.Booking;
 import com.upgrad.hirewheels.entities.Vehicle;
 import com.upgrad.hirewheels.responsemodel.VehicleDetailResponse;
+import com.upgrad.hirewheels.util.EntityDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,16 @@ public class VehicleServiceImpl implements VehicleService {
     @Qualifier("bookingDAO")
     BookingDAO bookingDAO;
 
+    @Autowired
+    @Qualifier("userDAO")
+    UserDAO userDAO;
 
+    @Autowired
+    @Qualifier("vehicleDAO")
+    VehicleDAO vehicleDAO;
+
+    @Autowired
+    EntityDTOMapper entityDTOMapper;
 
     /**
      * Returns all the available vehicle in the requested Category for booking with respect to Date, Location and Availability.
@@ -69,20 +79,7 @@ public class VehicleServiceImpl implements VehicleService {
         for (Vehicle v : returnedVehicleList) {
             //if (approvedVehicles.contains(v.getId())) {
                 if(!bookedVehicleIdList.contains(v.getId())){
-                    VehicleDetailResponse vehicleDetailResponse = new VehicleDetailResponse();
-                    vehicleDetailResponse.setVehicleId(v.getId());
-                    vehicleDetailResponse.setVehicleModel(v.getVehicleModel());
-                    vehicleDetailResponse.setVehicleOwnerId(v.getUser().getId());
-                    vehicleDetailResponse.setVehicleOwnerName(v.getUser().getFirstName());
-                    vehicleDetailResponse.setVehicleNumber(v.getVehicleNumber());
-                    vehicleDetailResponse.setColor(v.getColor());
-                    vehicleDetailResponse.setCostPerHour(v.getVehicleSubCategory().getPricePerHour());
-                    vehicleDetailResponse.setFuelType(v.getFuelType().getFuelType());
-                    vehicleDetailResponse.setLocationId(v.getLocationWithVehicle().getId());
-                    vehicleDetailResponse.setCarImageUrl(v.getCarImageUrl());
-                    vehicleDetailResponse.setActivityId(v.getAdminRequest().getActivity().getId());
-                    vehicleDetailResponse.setRequestStatusId(v.getAdminRequest().getRequestStatus().getId());
-                    vehicleDetailResponse.setVehicleSubCategoryId(v.getVehicleSubCategory().getId());
+                    VehicleDetailResponse vehicleDetailResponse = entityDTOMapper.convertToVehicleResponse(v);
                     mapVehicle.add(vehicleDetailResponse);
                 }
             //}
@@ -90,7 +87,33 @@ public class VehicleServiceImpl implements VehicleService {
        return mapVehicle;
     }
 
-
+    public List<VehicleDetailResponse> getAllVehicleByUserId(int userId) {
+        List<VehicleDetailResponse> mapVehicle = new ArrayList<>();
+        List<Vehicle> returnedVehicleList;
+        if (userId != 1){
+            returnedVehicleList = userDAO.findById(userId).get().getVehiclesList();
+        } else {
+            returnedVehicleList = vehicleDAO.findAll();
+        }
+        for (Vehicle v : returnedVehicleList) {
+            VehicleDetailResponse vehicleDetailResponse = new VehicleDetailResponse();
+            vehicleDetailResponse.setVehicleId(v.getId());
+            vehicleDetailResponse.setVehicleModel(v.getVehicleModel());
+            vehicleDetailResponse.setVehicleOwnerId(v.getUser().getId());
+            vehicleDetailResponse.setVehicleNumber(v.getVehicleNumber());
+            vehicleDetailResponse.setVehicleOwnerName(v.getUser().getFirstName());
+            vehicleDetailResponse.setColor(v.getColor());
+            vehicleDetailResponse.setCostPerHour(v.getVehicleSubCategory().getPricePerHour());
+            vehicleDetailResponse.setFuelType(v.getFuelType().getFuelType());
+            vehicleDetailResponse.setLocationId(v.getLocationWithVehicle().getId());
+            vehicleDetailResponse.setCarImageUrl(v.getCarImageUrl());
+            vehicleDetailResponse.setActivityId(v.getAdminRequest().getActivity().getId());
+            vehicleDetailResponse.setRequestStatusId(v.getAdminRequest().getRequestStatus().getId());
+            vehicleDetailResponse.setVehicleSubCategoryId(v.getVehicleSubCategory().getId());
+            mapVehicle.add(vehicleDetailResponse);
+        }
+        return mapVehicle;
+    }
 
 
 }

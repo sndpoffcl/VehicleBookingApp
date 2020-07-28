@@ -9,4 +9,5 @@ public class UserDTO {
     String email;
     String password;
     String mobileNo;
+    int walletMoney;
 }

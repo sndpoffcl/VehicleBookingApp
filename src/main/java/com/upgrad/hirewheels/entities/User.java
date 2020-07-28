@@ -2,6 +2,7 @@ package com.upgrad.hirewheels.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,6 +28,10 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     UserRole userRole;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonManagedReference
+    List<Vehicle> vehiclesList;
 
     @OneToMany(mappedBy = "bookingWithUser" , fetch = FetchType.LAZY)
     List<Booking> bookingList;

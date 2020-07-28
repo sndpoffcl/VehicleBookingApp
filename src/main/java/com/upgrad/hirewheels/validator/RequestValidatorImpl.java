@@ -1,10 +1,12 @@
-/*
 package com.upgrad.hirewheels.validator;
 
+import com.upgrad.hirewheels.dao.UserDAO;
 import com.upgrad.hirewheels.dto.AdminRequestDTO;
 import com.upgrad.hirewheels.dto.VehicleDTO;
+import com.upgrad.hirewheels.entities.Vehicle;
 import com.upgrad.hirewheels.exceptions.APIException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,13 +19,12 @@ public class RequestValidatorImpl implements RequestValidator {
 
     List<Integer> activityIds = new ArrayList<>(Arrays.asList(202,203));
 
-   */
-/* @Autowired
-    UserDAO userDAO;*//*
+ @Autowired
+ @Qualifier("userDAO")
+ UserDAO userDAO;
 
 
-   */
-/* @Override
+ @Override
     public void validateChangeVehicleAvailability(AdminRequestDTO adminRequestDTO, int vehicleId) {
         if (vehicleId == 0){
             throw new APIException("Vehicle Id can't be empty");
@@ -32,7 +33,7 @@ public class RequestValidatorImpl implements RequestValidator {
             throw new APIException("User Id can't be empty");
         }
         if (adminRequestDTO.getUserId() != 1) {
-            List<Integer> vehicleIdList =  userDAO.findById(adminRequestDTO.getUserId()).get().getVehiclesList().stream().map(Vehicle::getVehicleId).collect(Collectors.toList());
+            List<Integer> vehicleIdList =  userDAO.findById(adminRequestDTO.getUserId()).get().getVehiclesList().stream().map(Vehicle::getId).collect(Collectors.toList());
             if (!vehicleIdList.contains(vehicleId)) {
                 throw new APIException("Only Owner Can OptIn/OptOut Vehicle");
             }
@@ -40,7 +41,7 @@ public class RequestValidatorImpl implements RequestValidator {
         if(!activityIds.contains(adminRequestDTO.getActivityId())){
             throw new APIException("Not a Valid Activity Id");
         }
-    }*//*
+    }
 
 
     @Override
@@ -54,4 +55,3 @@ public class RequestValidatorImpl implements RequestValidator {
 
     }
 }
-*/

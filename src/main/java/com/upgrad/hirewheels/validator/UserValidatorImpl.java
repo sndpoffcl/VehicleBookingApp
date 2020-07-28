@@ -11,18 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserValidatorImpl implements UserValidator {
 
-    //To-DO:Can include isBlank validation if required.
-
-    @Override
-    public void validateuserLogin(LoginDTO user) {
-        EmailValidator validator = EmailValidator.getInstance();
-        if (!validator.isValid(user.getEmail())) {
-            throw new APIException("Email Id Validation Error");
-        }
-        if(user.getEmail() == null || user.getEmail().isEmpty()  || user.getPassword() == null || user.getPassword().isEmpty() ) {
-            throw new APIException("Email/Password cannot be null or empty");
-        }
-    }
 
     @Override
     public void validateUserSignUp(UserDTO user){

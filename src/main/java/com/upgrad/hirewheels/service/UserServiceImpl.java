@@ -10,6 +10,7 @@ import com.upgrad.hirewheels.entities.UserRole;
 import com.upgrad.hirewheels.exceptions.APIException;
 import com.upgrad.hirewheels.exceptions.UserAlreadyExistsException;
 import com.upgrad.hirewheels.exceptions.UserNotFoundException;
+import com.upgrad.hirewheels.util.DTOEntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
     @Qualifier("userRoleDAO")
     UserRoleDAO userRoleDAO;
 
+    @Autowired
+    DTOEntityMapper dtoEntityMapper;
+
     /**
      * Checks if the userDTO mobile number/email is already exists or not. If not exists, saves the userDTO detail else throws an error.
      * @param userDTO
@@ -48,15 +52,8 @@ public class UserServiceImpl implements UserService {
             if (returnedUser1 != null) {
                 throw new UserAlreadyExistsException("Mobile Number Already Exists");
                 }
-            User user = new User();
-            user.setWalletMoney(10000);
-            user.setUserRole(userRoleDAO.findById(2).get()); //RoleId:2 for User
-            user.setEmail(userDTO.getEmail());
-            user.setPassword(userDTO.getPassword());
-            user.setFirstName(userDTO.getFirstName());
-            user.setLastName(userDTO.getLastName());
-            user.setMobileNo(userDTO.getMobileNo());
-            User savedUser = userDAO.save(user);
+            User newUser = dtoEntityMapper.convertToUserEntity(userDTO);
+            User savedUser = userDAO.save(newUser);
             return savedUser;
     }
 

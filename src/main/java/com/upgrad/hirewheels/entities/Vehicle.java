@@ -31,7 +31,7 @@ public class Vehicle {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JsonBackReference
     Location locationWithVehicle;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne
     @JsonBackReference
     User user;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "vehicleWithBooking",cascade = CascadeType.MERGE)

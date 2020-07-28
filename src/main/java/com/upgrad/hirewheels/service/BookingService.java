@@ -8,5 +8,6 @@ import com.upgrad.hirewheels.responsemodel.BookingHistoryResponse;
 import java.util.List;
 
 public interface BookingService {
-
+    Booking addBooking(BookingDTO booking) throws GlobalExceptionHandler;
+    List<BookingHistoryResponse> bookingHistory(int userId) throws GlobalExceptionHandler;
 }
