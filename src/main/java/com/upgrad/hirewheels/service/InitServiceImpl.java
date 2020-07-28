@@ -72,24 +72,8 @@ public class InitServiceImpl implements InitService {
         addFuelType();
         addRequestStatus();
         addLocation();
-        addVehicle();
     }
 
-    public void addVehicle(){
-        Vehicle vehicle = new Vehicle();
-        vehicle.setId(1);
-        vehicle.setCarImageUrl("URL");
-        vehicle.setColor("Black");
-        vehicle.setFuelType(fuelTypeDAO.findById(1).get());
-        vehicle.setLocationWithVehicle(locationDAO.findById(400018).get());
-        vehicle.setUser(userDAO.findById(1).get());
-        vehicle.setVehicleModel("Tata Harrier");
-        vehicle.setVehicleNumber("MH-12-1234");
-        vehicle.setVehicleSubCategory(vehicleSubCategoryDAO.findById(1).get());
-        vehicle.setBookingsList(new ArrayList<>());
-        vehicle.setAdminRequest(new AdminRequest());
-        vehicleDAO.save(vehicle);
-    }
 
     private void addLocation() {
         Location location = new Location();
